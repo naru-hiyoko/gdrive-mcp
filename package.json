@@ -1,0 +1,22 @@
+{
+  "name": "gdrive-mcp",
+  "version": "0.1.0",
+  "description": "Google Drive MCP server for AI agents",
+  "type": "module",
+  "bin": {
+    "gdrive-mcp": "build/index.js"
+  },
+  "scripts": {
+    "build": "tsc && node -e \"import('fs').then(fs => fs.default.chmodSync('build/index.js', '755'))\"",
+    "watch": "tsc --watch",
+    "inspector": "npm run build && npx @modelcontextprotocol/inspector build/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.0",
+    "googleapis": "^140.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}
