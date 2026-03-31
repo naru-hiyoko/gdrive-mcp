@@ -62,22 +62,34 @@ node build/index.js
 CREDENTIALS_DIR=/path/to/your/gdrive node build/index.js
 ```
 
-### MCP 設定で環境変数を指定する場合
+## MCP 設定例（VS Code）
 
 ```json
 {
-  "mcp": {
     "servers": {
       "gdrive": {
         "type": "stdio",
         "command": "node",
-        "args": ["/path/to/gdrive_download/build/index.js"],
-        "env": {
-          "CREDENTIALS_DIR": "/path/to/your/gdrive"
-        }
+        "args": ["/path/to/gdrive_download/build/index.js"]
       }
     }
-  }
+}
+```
+
+```json
+{
+	"servers": {
+		"gdrive": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"github:naru-hiyoko/gdrive-mcp"
+			],
+			"env": {
+				"CREDENTIALS_DIR": "/<HOME_DIR>/.agent/secrets/gdrive"
+			}
+		}
+	}
 }
 ```
 
@@ -111,20 +123,4 @@ node build/index.js
 
 # MCP Inspector で動作確認
 npm run inspector
-```
-
-## MCP 設定例（VS Code）
-
-```json
-{
-  "mcp": {
-    "servers": {
-      "gdrive": {
-        "type": "stdio",
-        "command": "node",
-        "args": ["/path/to/gdrive_download/build/index.js"]
-      }
-    }
-  }
-}
 ```
