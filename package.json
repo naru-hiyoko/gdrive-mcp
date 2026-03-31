@@ -9,14 +9,19 @@
   "scripts": {
     "build": "tsc && node -e \"import('fs').then(fs => fs.default.chmodSync('build/index.js', '755'))\"",
     "watch": "tsc --watch",
-    "inspector": "npm run build && npx @modelcontextprotocol/inspector build/index.js"
+    "inspector": "npm run build && npx @modelcontextprotocol/inspector build/index.js",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.13.0",
     "googleapis": "^140.0.1"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^22.0.0",
-    "typescript": "^5.5.0"
+    "eslint": "^10.1.0",
+    "typescript": "^5.5.0",
+    "typescript-eslint": "^8.58.0"
   }
 }
