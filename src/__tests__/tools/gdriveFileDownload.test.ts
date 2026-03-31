@@ -62,7 +62,7 @@ describe('gdriveFileDownload', () => {
           get: vi.fn().mockRejectedValue(new Error('404 Not Found')),
           export: vi.fn(),
         },
-      } as ReturnType<typeof gdriveService.getDriveClient>)
+      } as unknown as ReturnType<typeof gdriveService.getDriveClient>)
       const result = await gdriveFileDownload({ file_id: 'nonexistent' })
       expect(result.isError).toBe(true)
       expect(result.content[0].text).toContain('404 Not Found')
@@ -76,14 +76,14 @@ describe('gdriveFileDownload', () => {
           }),
           export: vi.fn(),
         },
-      } as ReturnType<typeof gdriveService.getDriveClient>)
+      } as unknown as ReturnType<typeof gdriveService.getDriveClient>)
       vi.mocked(gdriveService.getSheetsClient).mockReturnValue({
         spreadsheets: {
           get: vi.fn().mockResolvedValue({
             data: { sheets: [{ properties: { title: 'Sheet1', sheetId: 0 } }] },
           }),
         },
-      } as ReturnType<typeof gdriveService.getSheetsClient>)
+      } as unknown as ReturnType<typeof gdriveService.getSheetsClient>)
       const result = await gdriveFileDownload({
         file_id: 'sheet123',
         sheet_name: 'NonExistentSheet',
@@ -106,7 +106,7 @@ describe('gdriveFileDownload', () => {
             .mockResolvedValueOnce({ data: readStream }),
           export: vi.fn(),
         },
-      } as ReturnType<typeof gdriveService.getDriveClient>)
+      } as unknown as ReturnType<typeof gdriveService.getDriveClient>)
 
       const result = await gdriveFileDownload({ file_id: 'img001', output_path: '/tmp/photo.png' })
       expect(result.isError).toBeUndefined()
@@ -131,7 +131,7 @@ describe('gdriveFileDownload', () => {
           }),
           export: vi.fn().mockResolvedValue({ data: readStream }),
         },
-      } as ReturnType<typeof gdriveService.getDriveClient>)
+      } as unknown as ReturnType<typeof gdriveService.getDriveClient>)
 
       const result = await gdriveFileDownload({ file_id: 'sheet001' })
       expect(result.isError).toBeUndefined()
@@ -154,7 +154,7 @@ describe('gdriveFileDownload', () => {
           }),
           export: vi.fn().mockResolvedValue({ data: readStream }),
         },
-      } as ReturnType<typeof gdriveService.getDriveClient>)
+      } as unknown as ReturnType<typeof gdriveService.getDriveClient>)
 
       const result = await gdriveFileDownload({ file_id: 'doc001' })
       expect(result.isError).toBeUndefined()
@@ -177,7 +177,7 @@ describe('gdriveFileDownload', () => {
           }),
           export: vi.fn().mockResolvedValue({ data: readStream }),
         },
-      } as ReturnType<typeof gdriveService.getDriveClient>)
+      } as unknown as ReturnType<typeof gdriveService.getDriveClient>)
 
       const result = await gdriveFileDownload({ file_id: 'ppt001' })
       expect(result.isError).toBeUndefined()
@@ -197,7 +197,7 @@ describe('gdriveFileDownload', () => {
           }),
           export: exportMock,
         },
-      } as ReturnType<typeof gdriveService.getDriveClient>)
+      } as unknown as ReturnType<typeof gdriveService.getDriveClient>)
 
       await gdriveFileDownload({ file_id: 'sheet002' })
       expect(exportMock).toHaveBeenCalledWith(
@@ -222,7 +222,7 @@ describe('gdriveFileDownload', () => {
             .mockResolvedValueOnce({ data: readStream }),
           export: vi.fn(),
         },
-      } as ReturnType<typeof gdriveService.getDriveClient>)
+      } as unknown as ReturnType<typeof gdriveService.getDriveClient>)
 
       await gdriveFileDownload({ file_id: 'bin001', output_path: '/custom/output.bin' })
       expect(createWriteStreamSpy).toHaveBeenCalledWith('/custom/output.bin')

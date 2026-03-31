@@ -38,7 +38,7 @@ vi.mock('../../services/gdriveService.js', () => ({
 describe('gdriveList', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(gdriveService.getDriveClient).mockReturnValue(makeDriveMock() as ReturnType<typeof gdriveService.getDriveClient>)
+    vi.mocked(gdriveService.getDriveClient).mockReturnValue(makeDriveMock() as unknown as ReturnType<typeof gdriveService.getDriveClient>)
   })
 
   it('フォルダ名とファイル一覧を含むレスポンスを返す', async () => {
@@ -51,7 +51,7 @@ describe('gdriveList', () => {
 
   it('folder_id をフォルダ情報リクエストに使う', async () => {
     const drive = makeDriveMock()
-    vi.mocked(gdriveService.getDriveClient).mockReturnValue(drive as ReturnType<typeof gdriveService.getDriveClient>)
+    vi.mocked(gdriveService.getDriveClient).mockReturnValue(drive as unknown as ReturnType<typeof gdriveService.getDriveClient>)
     await gdriveList({ folder_id: 'specific_folder_id' })
     expect(drive.files.get).toHaveBeenCalledWith(
       expect.objectContaining({ fileId: 'specific_folder_id' })
@@ -72,7 +72,7 @@ describe('gdriveList', () => {
 
   it('空フォルダの場合も正常に動作する', async () => {
     vi.mocked(gdriveService.getDriveClient).mockReturnValue(
-      makeDriveMock([], 'EmptyFolder') as ReturnType<typeof gdriveService.getDriveClient>
+      makeDriveMock([], 'EmptyFolder') as unknown as ReturnType<typeof gdriveService.getDriveClient>
     )
     const result = await gdriveList({ folder_id: 'empty_folder' })
     expect(result.isError).toBeUndefined()
@@ -83,7 +83,7 @@ describe('gdriveList', () => {
   describe('recursive オプション', () => {
     it('recursive: false のとき subfolder の中は取得しない', async () => {
       const drive = makeDriveMock()
-      vi.mocked(gdriveService.getDriveClient).mockReturnValue(drive as ReturnType<typeof gdriveService.getDriveClient>)
+      vi.mocked(gdriveService.getDriveClient).mockReturnValue(drive as unknown as ReturnType<typeof gdriveService.getDriveClient>)
       await gdriveList({ folder_id: 'root', recursive: false })
       // files.list は 1 回だけ呼ばれる
       expect(drive.files.list).toHaveBeenCalledTimes(1)
@@ -100,7 +100,7 @@ describe('gdriveList', () => {
           get: vi.fn().mockResolvedValue({ data: { name: 'TestFolder' } }),
         },
       }
-      vi.mocked(gdriveService.getDriveClient).mockReturnValue(drive as ReturnType<typeof gdriveService.getDriveClient>)
+      vi.mocked(gdriveService.getDriveClient).mockReturnValue(drive as unknown as ReturnType<typeof gdriveService.getDriveClient>)
       await gdriveList({ folder_id: 'root', recursive: true })
       // folder001 の中を取得するため、list は 2 回呼ばれる（root + folder001）
       expect(drive.files.list).toHaveBeenCalledTimes(2)
@@ -120,7 +120,7 @@ describe('gdriveList', () => {
   it('Drive API エラー時は isError: true を返す', async () => {
     const drive = makeDriveMock()
     drive.files.get = vi.fn().mockRejectedValue(new Error('403 Forbidden'))
-    vi.mocked(gdriveService.getDriveClient).mockReturnValue(drive as ReturnType<typeof gdriveService.getDriveClient>)
+    vi.mocked(gdriveService.getDriveClient).mockReturnValue(drive as unknown as ReturnType<typeof gdriveService.getDriveClient>)
     const result = await gdriveList({ folder_id: 'forbidden_folder' })
     expect(result.isError).toBe(true)
     expect(result.content[0].text).toContain('403 Forbidden')

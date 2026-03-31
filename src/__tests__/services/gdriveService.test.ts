@@ -61,14 +61,14 @@ describe('gdriveService', () => {
 
     it('credentials.json が存在する場合に OAuth2Client を返す', () => {
       vi.mocked(fs.existsSync).mockReturnValue(true)
-      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS as unknown as Buffer)
+      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS)
       const client = buildOAuth2Client()
       expect(client).toBeDefined()
     })
 
     it('credentials.json から client_id と client_secret を読み込む', () => {
       vi.mocked(fs.existsSync).mockReturnValue(true)
-      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS as unknown as Buffer)
+      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS)
       buildOAuth2Client()
       expect(fs.readFileSync).toHaveBeenCalledWith(CREDENTIALS_PATH, 'utf8')
     })
@@ -84,7 +84,7 @@ describe('gdriveService', () => {
       vi.mocked(fs.existsSync)
         .mockReturnValueOnce(true)  // credentials.json
         .mockReturnValueOnce(false) // token.json
-      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS as unknown as Buffer)
+      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS)
       // エラーメッセージに TOKEN_PATH が含まれることを確認
       expect(() => getAuthenticatedClient()).toThrow('token.json が見つかりません')
     })
@@ -92,8 +92,8 @@ describe('gdriveService', () => {
     it('credentials と token が揃っている場合に OAuth2Client を返す', () => {
       vi.mocked(fs.existsSync).mockReturnValue(true)
       vi.mocked(fs.readFileSync)
-        .mockReturnValueOnce(MOCK_CREDENTIALS as unknown as Buffer)
-        .mockReturnValueOnce(MOCK_TOKEN as unknown as Buffer)
+        .mockReturnValueOnce(MOCK_CREDENTIALS)
+        .mockReturnValueOnce(MOCK_TOKEN)
       const client = getAuthenticatedClient()
       expect(client).toBeDefined()
       expect(mockOAuth2Client.setCredentials).toHaveBeenCalledWith(
@@ -104,8 +104,8 @@ describe('gdriveService', () => {
     it('token refresh イベントハンドラを登録する', () => {
       vi.mocked(fs.existsSync).mockReturnValue(true)
       vi.mocked(fs.readFileSync)
-        .mockReturnValueOnce(MOCK_CREDENTIALS as unknown as Buffer)
-        .mockReturnValueOnce(MOCK_TOKEN as unknown as Buffer)
+        .mockReturnValueOnce(MOCK_CREDENTIALS)
+        .mockReturnValueOnce(MOCK_TOKEN)
       getAuthenticatedClient()
       expect(mockOAuth2Client.on).toHaveBeenCalledWith('tokens', expect.any(Function))
     })
@@ -114,7 +114,7 @@ describe('gdriveService', () => {
   describe('getAuthUrl', () => {
     it('認証 URL 文字列を返す', () => {
       vi.mocked(fs.existsSync).mockReturnValue(true)
-      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS as unknown as Buffer)
+      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS)
       const url = getAuthUrl()
       expect(typeof url).toBe('string')
       expect(url).toContain('https://accounts.google.com')
@@ -124,7 +124,7 @@ describe('gdriveService', () => {
   describe('completeAuth', () => {
     it('認証コードから token.json を保存して TOKEN_PATH を返す', async () => {
       vi.mocked(fs.existsSync).mockReturnValue(true)
-      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS as unknown as Buffer)
+      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS)
       vi.mocked(fs.writeFileSync).mockImplementation(() => undefined)
       const result = await completeAuth('auth_code_123')
       expect(result).toBe(TOKEN_PATH)
@@ -134,7 +134,7 @@ describe('gdriveService', () => {
 
     it('リダイレクト URL から code を抽出して処理する', async () => {
       vi.mocked(fs.existsSync).mockReturnValue(true)
-      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS as unknown as Buffer)
+      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS)
       vi.mocked(fs.writeFileSync).mockImplementation(() => undefined)
       const result = await completeAuth('http://localhost?code=extracted_code')
       expect(result).toBe(TOKEN_PATH)
@@ -144,7 +144,7 @@ describe('gdriveService', () => {
 
     it('code がないリダイレクト URL はそのまま code として使う', async () => {
       vi.mocked(fs.existsSync).mockReturnValue(true)
-      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS as unknown as Buffer)
+      vi.mocked(fs.readFileSync).mockReturnValue(MOCK_CREDENTIALS)
       vi.mocked(fs.writeFileSync).mockImplementation(() => undefined)
       const redirectUrl = 'http://localhost?state=test'
       await completeAuth(redirectUrl)
